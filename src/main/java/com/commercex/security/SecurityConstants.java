@@ -2,7 +2,9 @@ package com.commercex.security;
 
 public class SecurityConstants {
     public static final String[] PUBLIC_URLS = {
-            "/api/auth/**",
+            "/api/auth/register",
+            "/api/auth/login",
+            "/api/auth/refresh",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html"

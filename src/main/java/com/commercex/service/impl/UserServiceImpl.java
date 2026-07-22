@@ -11,6 +11,8 @@ import com.commercex.repository.UserRepository;
 import com.commercex.service.RoleService;
 import com.commercex.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder; // Injected BCrypt encoder
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -35,8 +37,6 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userMapper.toEntity(request);
-        
-        // Hash the password securely using BCrypt before saving
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         
         Role customerRole = roleService.getDefaultCustomerRole();
@@ -68,7 +68,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getCurrentUser() {
-        throw new UnsupportedOperationException("getCurrentUser requires Spring Security Context (Step 4)");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            throw new org.springframework.security.authentication.AuthenticationCredentialsNotFoundException("User is not authenticated");
+        }
+        String email = authentication.getName();
+        return findByEmail(email);
     }
 }
