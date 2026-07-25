@@ -43,13 +43,33 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleCartNotFoundException(CartNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleCartItemNotFoundException(CartItemNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     @ExceptionHandler(InsufficientStockException.class)
     public ResponseEntity<ApiResponse<Object>> handleInsufficientStockException(InsufficientStockException ex) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(ProductOutOfStockException.class)
+    public ResponseEntity<ApiResponse<Object>> handleProductOutOfStockException(ProductOutOfStockException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(InvalidStockOperationException.class)
     public ResponseEntity<ApiResponse<Object>> handleInvalidStockOperationException(InvalidStockOperationException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCartOperationException.class)
+    public ResponseEntity<ApiResponse<Object>> handleInvalidCartOperationException(InvalidCartOperationException ex) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
