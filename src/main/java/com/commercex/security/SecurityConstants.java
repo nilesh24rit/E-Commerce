@@ -9,6 +9,12 @@ public class SecurityConstants {
             "/swagger-ui/**",
             "/swagger-ui.html"
     };
+    public static final String[] PUBLIC_GET_URLS = {
+            "/api/categories/**",
+            "/api/categories",
+            "/api/products/**",
+            "/api/products"
+    };
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
 }
