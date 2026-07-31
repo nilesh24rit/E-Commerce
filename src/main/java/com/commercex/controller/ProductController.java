@@ -4,7 +4,12 @@ import com.commercex.dto.ApiResponse;
 import com.commercex.dto.CreateProductRequest;
 import com.commercex.dto.ProductResponse;
 import com.commercex.dto.UpdateProductRequest;
+import com.commercex.dto.ProductSearchRequest;
+import com.commercex.dto.ProductSearchResponse;
+import com.commercex.dto.ReviewResponse;
+import com.commercex.service.ProductSearchService;
 import com.commercex.service.ProductService;
+import com.commercex.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -24,6 +29,8 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductSearchService productSearchService;
+    private final ReviewService reviewService;
 
     @Operation(summary = "Create a new product")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_SELLER')")
@@ -61,5 +68,19 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductResponse>> getProductBySlug(@PathVariable String slug) {
         ProductResponse response = productService.getProductBySlug(slug);
         return ResponseEntity.ok(ApiResponse.success(response, "Product retrieved successfully"));
+    }
+
+    @Operation(summary = "Advanced product search")
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<ProductSearchResponse>> searchProducts(@ModelAttribute ProductSearchRequest request) {
+        ProductSearchResponse response = productSearchService.searchProducts(request);
+        return ResponseEntity.ok(ApiResponse.success(response, "Search results retrieved"));
+    }
+
+    @Operation(summary = "Get product reviews")
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<ApiResponse<List<ReviewResponse>>> getProductReviews(@PathVariable UUID id) {
+        List<ReviewResponse> response = reviewService.getProductReviews(id);
+        return ResponseEntity.ok(ApiResponse.success(response, "Reviews retrieved successfully"));
     }
 }

@@ -54,6 +54,13 @@ public class Product extends BaseEntity {
     @Builder.Default
     private boolean active = true;
 
+    @Builder.Default
+    @Column(precision = 3, scale = 2)
+    private Double averageRating = 0.0;
+
+    @Builder.Default
+    private Long totalReviews = 0L;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;

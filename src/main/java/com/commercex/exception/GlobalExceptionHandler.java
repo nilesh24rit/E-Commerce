@@ -164,6 +164,31 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(WishlistNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleWishlistNotFoundException(WishlistNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateWishlistItemException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDuplicateWishlistItemException(DuplicateWishlistItemException ex) {
+        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(ReviewNotAllowedException.class)
+    public ResponseEntity<ApiResponse<Object>> handleReviewNotAllowedException(ReviewNotAllowedException ex) {
+        return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateReviewException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDuplicateReviewException(DuplicateReviewException ex) {
+        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidRatingException.class)
+    public ResponseEntity<ApiResponse<Object>> handleInvalidRatingException(InvalidRatingException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Object>> handleAccessDeniedException(AccessDeniedException ex) {
         return buildErrorResponse(HttpStatus.FORBIDDEN, "You do not have permission to access this resource");

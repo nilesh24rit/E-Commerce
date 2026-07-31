@@ -116,7 +116,7 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = getPaymentEntity(paymentId);
 
         User currentUser = userService.getCurrentUser();
-        if (!payment.getOrder().getUser().getId().equals(currentUser.getId()) && !currentUser.getRole().name().equals("ROLE_ADMIN")) {
+        if (!payment.getOrder().getUser().getId().equals(currentUser.getId()) && currentUser.getRoles().stream().noneMatch(r -> r.getName().name().equals("ROLE_ADMIN"))) {
             throw new PaymentNotFoundException("Payment not found or access denied");
         }
 
@@ -138,7 +138,7 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = getPaymentEntity(paymentId);
 
         User currentUser = userService.getCurrentUser();
-        if (!payment.getOrder().getUser().getId().equals(currentUser.getId()) && !currentUser.getRole().name().equals("ROLE_ADMIN")) {
+        if (!payment.getOrder().getUser().getId().equals(currentUser.getId()) && currentUser.getRoles().stream().noneMatch(r -> r.getName().name().equals("ROLE_ADMIN"))) {
             throw new PaymentNotFoundException("Payment not found or access denied");
         }
 
@@ -159,7 +159,7 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = getPaymentEntity(paymentId);
         
         User currentUser = userService.getCurrentUser();
-        if (!payment.getOrder().getUser().getId().equals(currentUser.getId()) && !currentUser.getRole().name().equals("ROLE_ADMIN")) {
+        if (!payment.getOrder().getUser().getId().equals(currentUser.getId()) && currentUser.getRoles().stream().noneMatch(r -> r.getName().name().equals("ROLE_ADMIN"))) {
             throw new PaymentNotFoundException("Payment not found or access denied");
         }
         

@@ -21,6 +21,8 @@ public class ProductResponse {
     private Integer quantity;
     private String status;
     private boolean active;
+    private Double averageRating;
+    private Long totalReviews;
     private CategoryResponse category;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

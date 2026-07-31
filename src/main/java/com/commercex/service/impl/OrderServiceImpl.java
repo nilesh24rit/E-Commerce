@@ -136,7 +136,7 @@ public class OrderServiceImpl implements OrderService {
         
         // Ensure user can only view their own orders unless they are ADMIN
         User currentUser = userService.getCurrentUser();
-        if (!order.getUser().getId().equals(currentUser.getId()) && !currentUser.getRole().name().equals("ROLE_ADMIN")) {
+        if (!order.getUser().getId().equals(currentUser.getId()) && currentUser.getRoles().stream().noneMatch(r -> r.getName().name().equals("ROLE_ADMIN"))) {
             throw new OrderNotFoundException("Order not found or you don't have access");
         }
         
@@ -168,7 +168,7 @@ public class OrderServiceImpl implements OrderService {
 
         // Allow Customer to cancel only their own order, and only if PENDING or CONFIRMED
         User currentUser = userService.getCurrentUser();
-        if (!order.getUser().getId().equals(currentUser.getId()) && !currentUser.getRole().name().equals("ROLE_ADMIN")) {
+        if (!order.getUser().getId().equals(currentUser.getId()) && currentUser.getRoles().stream().noneMatch(r -> r.getName().name().equals("ROLE_ADMIN"))) {
             throw new OrderNotFoundException("Order not found or you don't have access");
         }
 

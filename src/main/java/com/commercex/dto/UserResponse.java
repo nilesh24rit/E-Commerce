@@ -5,8 +5,13 @@ import lombok.Data;
 import java.util.Set;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponse {
     private UUID id;
     private String firstName;
