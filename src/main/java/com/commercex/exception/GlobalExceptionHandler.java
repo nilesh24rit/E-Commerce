@@ -139,6 +139,31 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(CouponNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleCouponNotFoundException(CouponNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(CouponExpiredException.class)
+    public ResponseEntity<ApiResponse<Object>> handleCouponExpiredException(CouponExpiredException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(CouponInactiveException.class)
+    public ResponseEntity<ApiResponse<Object>> handleCouponInactiveException(CouponInactiveException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(CouponUsageLimitExceededException.class)
+    public ResponseEntity<ApiResponse<Object>> handleCouponUsageLimitExceededException(CouponUsageLimitExceededException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCouponException.class)
+    public ResponseEntity<ApiResponse<Object>> handleInvalidCouponException(InvalidCouponException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Object>> handleAccessDeniedException(AccessDeniedException ex) {
         return buildErrorResponse(HttpStatus.FORBIDDEN, "You do not have permission to access this resource");

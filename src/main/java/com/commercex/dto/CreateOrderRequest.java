@@ -7,4 +7,5 @@ public class CreateOrderRequest {
     private String shippingAddress;
     private String billingAddress;
     private String orderNotes;
+    private String couponCode;
 }

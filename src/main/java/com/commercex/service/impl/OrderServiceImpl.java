@@ -10,6 +10,7 @@ import com.commercex.repository.CartRepository;
 import com.commercex.repository.OrderRepository;
 import com.commercex.service.CartService;
 import com.commercex.service.InventoryService;
+import com.commercex.service.CouponService;
 import com.commercex.service.OrderService;
 import com.commercex.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartService cartService;
     private final InventoryService inventoryService;
     private final UserService userService;
+    private final CouponService couponService;
     private final OrderMapper orderMapper;
 
     @Override
@@ -65,6 +67,13 @@ public class OrderServiceImpl implements OrderService {
                 .map(CartItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal discount = BigDecimal.ZERO;
+
+        if (request.getCouponCode() != null && !request.getCouponCode().isBlank()) {
+            CouponValidationResponse validation = couponService.validateCoupon(request.getCouponCode(), subtotal);
+            discount = validation.getDiscountAmount();
+            couponService.incrementUsage(request.getCouponCode());
+        }
+
         BigDecimal shippingCharge = BigDecimal.valueOf(10.00); // Fixed for now
         BigDecimal totalAmount = subtotal.subtract(discount).add(shippingCharge);
 
