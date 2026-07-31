@@ -114,6 +114,31 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.FORBIDDEN, "User account is locked");
     }
 
+    @ExceptionHandler(PaymentNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handlePaymentNotFoundException(PaymentNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(PaymentFailedException.class)
+    public ResponseEntity<ApiResponse<Object>> handlePaymentFailedException(PaymentFailedException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicatePaymentException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDuplicatePaymentException(DuplicatePaymentException ex) {
+        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(RefundNotAllowedException.class)
+    public ResponseEntity<ApiResponse<Object>> handleRefundNotAllowedException(RefundNotAllowedException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(PaymentAlreadyCompletedException.class)
+    public ResponseEntity<ApiResponse<Object>> handlePaymentAlreadyCompletedException(PaymentAlreadyCompletedException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Object>> handleAccessDeniedException(AccessDeniedException ex) {
         return buildErrorResponse(HttpStatus.FORBIDDEN, "You do not have permission to access this resource");
