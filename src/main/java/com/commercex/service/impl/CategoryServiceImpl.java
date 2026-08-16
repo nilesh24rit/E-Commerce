@@ -11,6 +11,8 @@ import com.commercex.repository.CategoryRepository;
 import com.commercex.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse createCategory(CreateCategoryRequest request) {
         log.info("Creating category with name: {}", request.getName());
         
@@ -46,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse updateCategory(UUID id, UpdateCategoryRequest request) {
         log.info("Updating category with ID: {}", id);
         Category category = findEntityById(id);
@@ -63,6 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public void deleteCategory(UUID id) {
         log.info("Soft deleting category with ID: {}", id);
         Category category = findEntityById(id);
@@ -72,12 +77,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "categories", key = "#id.toString()")
     public CategoryResponse getCategoryById(UUID id) {
         return categoryMapper.toDto(findEntityById(id));
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "categories", key = "#slug")
     public CategoryResponse getCategoryBySlug(String slug) {
         Category category = categoryRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with slug: " + slug));
@@ -86,6 +93,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "categories", key = "'all'")
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAllByActiveTrue().stream()
                 .map(categoryMapper::toDto)

@@ -4,6 +4,8 @@ import com.commercex.dto.*;
 import com.commercex.entity.*;
 import com.commercex.entity.enums.OrderStatus;
 import com.commercex.entity.enums.PaymentStatus;
+import com.commercex.event.CouponAppliedEvent;
+import com.commercex.event.OrderCreatedEvent;
 import com.commercex.exception.*;
 import com.commercex.mapper.OrderMapper;
 import com.commercex.repository.CartRepository;
@@ -15,6 +17,7 @@ import com.commercex.service.OrderService;
 import com.commercex.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserService userService;
     private final CouponService couponService;
     private final OrderMapper orderMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -115,6 +119,11 @@ public class OrderServiceImpl implements OrderService {
 
         // Clear shopping cart
         cartService.clearCart();
+
+        eventPublisher.publishEvent(new OrderCreatedEvent(savedOrder.getId(), currentUser.getEmail()));
+        if (request.getCouponCode() != null && !request.getCouponCode().isBlank()) {
+            eventPublisher.publishEvent(new CouponAppliedEvent(request.getCouponCode(), currentUser.getEmail()));
+        }
 
         log.info("Order created successfully: {}", orderNumber);
         return orderMapper.toDto(savedOrder);

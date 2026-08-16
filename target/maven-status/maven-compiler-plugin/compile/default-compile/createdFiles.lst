@@ -1,8 +1,10 @@
 com\commercex\entity\WishlistItem.class
 com\commercex\entity\RefreshToken.class
+com\commercex\scheduler\SystemScheduler.class
 com\commercex\dto\PaymentStatusResponse.class
 com\commercex\service\RoleService.class
 com\commercex\entity\enums\OrderStatus.class
+com\commercex\event\UserRegisteredEvent.class
 com\commercex\dto\CouponResponse.class
 com\commercex\repository\CouponRepository.class
 com\commercex\dto\OrderResponse$OrderResponseBuilder.class
@@ -18,6 +20,7 @@ com\commercex\dto\RefreshTokenRequest.class
 com\commercex\dto\WishlistItemResponse$WishlistItemResponseBuilder.class
 com\commercex\entity\Wishlist$WishlistBuilder.class
 com\commercex\entity\User.class
+com\commercex\event\CouponAppliedEvent.class
 com\commercex\exception\InsufficientStockException.class
 com\commercex\dto\ReviewResponse$ReviewResponseBuilder.class
 com\commercex\dto\UserDto.class
@@ -41,6 +44,7 @@ com\commercex\dto\CouponResponse$CouponResponseBuilder.class
 com\commercex\dto\ProductResponse$ProductResponseBuilder.class
 com\commercex\mapper\PaymentMapperImpl.class
 com\commercex\service\impl\ReviewServiceImpl.class
+com\commercex\config\RedisConfig.class
 com\commercex\entity\Coupon$CouponBuilder.class
 com\commercex\mapper\OrderMapper.class
 com\commercex\entity\Inventory$InventoryBuilder.class
@@ -73,10 +77,12 @@ com\commercex\exception\CartItemNotFoundException.class
 com\commercex\service\impl\CartServiceImpl.class
 com\commercex\service\CouponService.class
 com\commercex\service\RefreshTokenService.class
+com\commercex\service\EmailService.class
 com\commercex\exception\OrderNotFoundException.class
 com\commercex\dto\CreateCouponRequest.class
 com\commercex\dto\UpdateReviewRequest.class
 com\commercex\entity\Role.class
+com\commercex\config\SchedulerConfig.class
 com\commercex\controller\CartController.class
 com\commercex\exception\ProductOutOfStockException.class
 com\commercex\security\JwtAuthenticationFilter.class
@@ -139,6 +145,7 @@ com\commercex\service\PaymentService.class
 com\commercex\repository\CategoryRepository.class
 com\commercex\exception\PaymentNotFoundException.class
 com\commercex\exception\RefundNotAllowedException.class
+com\commercex\event\PaymentCompletedEvent.class
 com\commercex\dto\PaymentResponse.class
 com\commercex\mapper\ReviewMapperImpl.class
 com\commercex\dto\ProductSearchResponse$ProductSearchResponseBuilder.class
@@ -160,6 +167,7 @@ com\commercex\config\RefreshTokenCleanupTask.class
 com\commercex\entity\CartItem.class
 com\commercex\exception\TokenRefreshException.class
 com\commercex\repository\ReviewRepository.class
+com\commercex\event\OrderCreatedEvent.class
 com\commercex\mapper\CategoryMapperImpl.class
 com\commercex\entity\Product.class
 com\commercex\controller\InventoryController.class
@@ -190,11 +198,13 @@ com\commercex\exception\UserAlreadyExistsException.class
 com\commercex\dto\PaymentHistoryResponse.class
 com\commercex\repository\CartItemRepository.class
 com\commercex\service\gateway\impl\DummyPaymentGateway.class
+com\commercex\controller\AdminSystemController.class
 com\commercex\service\impl\CouponServiceImpl.class
 com\commercex\service\impl\PaymentServiceImpl.class
 com\commercex\exception\ResourceAlreadyExistsException.class
 com\commercex\dto\OrderItemResponse$OrderItemResponseBuilder.class
 com\commercex\auth\AuthenticationServiceImpl.class
+com\commercex\event\ReviewAddedEvent.class
 com\commercex\config\OpenApiConfig.class
 com\commercex\dto\LogoutResponse.class
 com\commercex\dto\WishlistResponse.class
@@ -219,6 +229,7 @@ com\commercex\mapper\UserMapper.class
 com\commercex\service\WishlistService.class
 com\commercex\exception\DuplicateWishlistItemException.class
 com\commercex\repository\WishlistItemRepository.class
+com\commercex\config\AsyncConfig.class
 com\commercex\exception\CouponExpiredException.class
 com\commercex\entity\BaseEntity.class
 com\commercex\entity\enums\PaymentMethod.class

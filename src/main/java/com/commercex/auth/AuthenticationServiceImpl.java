@@ -10,11 +10,13 @@ import com.commercex.entity.RefreshToken;
 import com.commercex.entity.User;
 import com.commercex.security.CustomUserDetails;
 import com.commercex.security.JwtTokenProvider;
+import com.commercex.event.UserRegisteredEvent;
 import com.commercex.service.RefreshTokenService;
 import com.commercex.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +35,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
+    private final ApplicationEventPublisher eventPublisher;
 
     private String getClientIp(HttpServletRequest request) {
         if (request == null) return null;
@@ -54,6 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         log.info("Registering new user with email: {}", request.getEmail());
         
         UserResponse userResponse = userService.createUser(request);
+        eventPublisher.publishEvent(new UserRegisteredEvent(userResponse.getId(), userResponse.getEmail(), userResponse.getFirstName()));
         
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())

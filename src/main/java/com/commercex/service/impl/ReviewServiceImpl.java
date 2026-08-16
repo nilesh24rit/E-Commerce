@@ -10,6 +10,7 @@ import com.commercex.entity.User;
 import com.commercex.exception.DuplicateReviewException;
 import com.commercex.exception.ResourceNotFoundException;
 import com.commercex.exception.ReviewNotAllowedException;
+import com.commercex.event.ReviewAddedEvent;
 import com.commercex.mapper.ReviewMapper;
 import com.commercex.repository.OrderRepository;
 import com.commercex.repository.ProductRepository;
@@ -18,6 +19,7 @@ import com.commercex.service.ReviewService;
 import com.commercex.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +39,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final ReviewMapper reviewMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -69,6 +72,8 @@ public class ReviewServiceImpl implements ReviewService {
                 
         Review savedReview = reviewRepository.save(review);
         updateProductRating(product.getId());
+        
+        eventPublisher.publishEvent(new ReviewAddedEvent(product.getId(), currentUser.getEmail()));
         
         return reviewMapper.toDto(savedReview);
     }

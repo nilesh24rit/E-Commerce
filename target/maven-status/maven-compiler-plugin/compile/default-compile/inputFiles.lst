@@ -42,6 +42,8 @@ C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\servic
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\impl\PaymentServiceImpl.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\controller\ProductController.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\controller\ReviewController.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\config\AsyncConfig.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\event\ReviewAddedEvent.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\entity\Inventory.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\exception\PaymentNotFoundException.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\exception\InsufficientStockException.java
@@ -59,8 +61,10 @@ C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\Up
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\InventorySummaryResponse.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\entity\Product.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\controller\CategoryController.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\event\UserRegisteredEvent.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\repository\WishlistItemRepository.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\ProductSearchService.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\event\CouponAppliedEvent.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\exception\DuplicateInventoryException.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\security\CustomUserDetailsService.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\impl\RoleServiceImpl.java
@@ -113,6 +117,7 @@ C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\Wi
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\entity\enums\PaymentStatus.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\auth\AuthenticationService.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\security\CustomAuthenticationEntryPoint.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\config\RedisConfig.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\security\JwtTokenType.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\AuthResponse.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\exception\CouponInactiveException.java
@@ -141,6 +146,7 @@ C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\except
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\StockOperationRequest.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\config\JpaConfig.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\impl\CouponServiceImpl.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\EmailService.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\WishlistService.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\exception\GlobalExceptionHandler.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\InventoryService.java
@@ -154,10 +160,12 @@ C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\entity
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\OrderService.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\LogoutResponse.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\CreateOrderRequest.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\event\OrderCreatedEvent.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\mapper\ProductMapper.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\impl\RefreshTokenServiceImpl.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\exception\InventoryNotFoundException.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\impl\WishlistServiceImpl.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\controller\AdminSystemController.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\UpdateCategoryRequest.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\entity\Order.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\entity\Role.java
@@ -166,8 +174,11 @@ C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\except
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\service\impl\CartServiceImpl.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\ProductResponse.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\CouponValidationResponse.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\config\SchedulerConfig.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\exception\ResourceAlreadyExistsException.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\scheduler\SystemScheduler.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\ProductSearchRequest.java
+C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\event\PaymentCompletedEvent.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\controller\AuthenticationController.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\exception\InvalidCouponException.java
 C:\Users\Pinki\OneDrive\Desktop\Be\E Commerce\src\main\java\com\commercex\dto\ApplyCouponRequest.java

@@ -9,6 +9,8 @@ import com.commercex.repository.CouponRepository;
 import com.commercex.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "coupons", allEntries = true)
     public CouponResponse createCoupon(CreateCouponRequest request) {
         log.info("Creating coupon with code: {}", request.getCode());
         
@@ -54,6 +57,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "coupons", allEntries = true)
     public CouponResponse updateCoupon(UUID id, UpdateCouponRequest request) {
         log.info("Updating coupon with id: {}", id);
         
@@ -74,6 +78,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "coupons", allEntries = true)
     public CouponResponse deactivateCoupon(UUID id) {
         Coupon coupon = getCouponEntity(id);
         coupon.setActive(false);
@@ -82,6 +87,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "coupons", allEntries = true)
     public void deleteCoupon(UUID id) {
         Coupon coupon = getCouponEntity(id);
         couponRepository.delete(coupon);
@@ -89,12 +95,14 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "coupons", key = "#code")
     public CouponResponse getCouponByCode(String code) {
         return couponMapper.toDto(getCouponEntityByCode(code));
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "coupons", key = "'all'")
     public List<CouponResponse> getAllCoupons() {
         return couponRepository.findAll().stream()
                 .map(couponMapper::toDto)

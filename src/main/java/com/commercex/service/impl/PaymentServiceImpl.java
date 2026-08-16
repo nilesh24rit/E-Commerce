@@ -6,6 +6,7 @@ import com.commercex.entity.Payment;
 import com.commercex.entity.User;
 import com.commercex.entity.enums.OrderStatus;
 import com.commercex.entity.enums.PaymentStatus;
+import com.commercex.event.PaymentCompletedEvent;
 import com.commercex.exception.*;
 import com.commercex.mapper.PaymentMapper;
 import com.commercex.repository.OrderRepository;
@@ -15,6 +16,7 @@ import com.commercex.service.UserService;
 import com.commercex.service.gateway.PaymentGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final UserService userService;
     private final PaymentMapper paymentMapper;
     private final PaymentGateway paymentGateway;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -105,6 +108,14 @@ public class PaymentServiceImpl implements PaymentService {
         Payment verifiedPayment = paymentGateway.verifyPayment(payment);
         
         syncOrderStatus(payment.getOrder(), verifiedPayment);
+        
+        if (verifiedPayment.getPaymentStatus() == PaymentStatus.SUCCESS) {
+            eventPublisher.publishEvent(new PaymentCompletedEvent(
+                    verifiedPayment.getOrder().getId(),
+                    verifiedPayment.getOrder().getUser().getEmail(),
+                    verifiedPayment.getAmount().toString()
+            ));
+        }
         
         return paymentMapper.toDto(paymentRepository.save(verifiedPayment));
     }
