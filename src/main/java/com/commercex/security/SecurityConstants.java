@@ -7,7 +7,11 @@ public class SecurityConstants {
             "/api/auth/refresh",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/swagger-ui.html"
+            "/swagger-ui.html",
+            "/actuator/health",
+            "/actuator/info",
+            "/actuator/prometheus",
+            "/actuator/metrics"
     };
     public static final String[] PUBLIC_GET_URLS = {
             "/api/categories/**",

@@ -39,3 +39,6 @@ build/
 *.log
 *.yml
 *.properties
+target/
+.env
+.env
