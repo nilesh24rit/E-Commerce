@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 8px;">
+        <h2 style="color: #27ae60;">Order Confirmation</h2>
+        <p>Your order has been placed successfully!</p>
+        <p><strong>Order ID:</strong> <span th:text="${orderId}">12345</span></p>
+        <p>Thank you for shopping with us.</p>
+    </div>
+</body>
+</html>

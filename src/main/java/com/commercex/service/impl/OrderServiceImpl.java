@@ -5,6 +5,7 @@ import com.commercex.entity.*;
 import com.commercex.entity.enums.OrderStatus;
 import com.commercex.entity.enums.PaymentStatus;
 import com.commercex.event.CouponAppliedEvent;
+import com.commercex.event.OrderCancelledEvent;
 import com.commercex.event.OrderCreatedEvent;
 import com.commercex.exception.*;
 import com.commercex.mapper.OrderMapper;
@@ -199,7 +200,9 @@ public class OrderServiceImpl implements OrderService {
             inventoryService.restockProduct(stockRequest);
         }
 
-        return orderMapper.toDto(orderRepository.save(order));
+        Order savedOrder = orderRepository.save(order);
+        eventPublisher.publishEvent(new OrderCancelledEvent(savedOrder.getId(), savedOrder.getUser().getEmail(), "Customer requested cancellation"));
+        return orderMapper.toDto(savedOrder);
     }
 
     private Order getOrderEntity(String orderNumber) {

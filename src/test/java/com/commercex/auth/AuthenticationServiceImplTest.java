@@ -44,6 +44,8 @@ class AuthenticationServiceImplTest {
     @Mock
     private RefreshTokenService refreshTokenService;
     @Mock
+    private org.springframework.context.ApplicationEventPublisher eventPublisher;
+    @Mock
     private HttpServletRequest httpRequest;
 
     @InjectMocks

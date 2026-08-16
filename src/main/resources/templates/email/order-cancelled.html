@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Cancelled</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 8px;">
+        <h2 style="color: #e74c3c;">Order Cancelled</h2>
+        <p>Order ID: <strong th:text="${orderId}">12345</strong> has been cancelled.</p>
+        <p th:if="${reason != null}">Reason: <span th:text="${reason}">Reason</span></p>
+    </div>
+</body>
+</html>

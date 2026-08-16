@@ -11,6 +11,8 @@ import com.commercex.repository.UserRepository;
 import com.commercex.service.RoleService;
 import com.commercex.service.UserService;
 import lombok.RequiredArgsConstructor;
+import com.commercex.event.PasswordResetEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -76,5 +79,13 @@ public class UserServiceImpl implements UserService {
         }
         String email = authentication.getName();
         return findByEmail(email);
+    }
+
+    @Override
+    @Transactional
+    public void requestPasswordReset(String email) {
+        User user = findByEmail(email);
+        String resetToken = UUID.randomUUID().toString();
+        eventPublisher.publishEvent(new PasswordResetEvent(user.getEmail(), resetToken));
     }
 }

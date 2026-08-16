@@ -2,6 +2,9 @@ package com.commercex.controller;
 
 import com.commercex.dto.ApiResponse;
 import com.commercex.scheduler.SystemScheduler;
+import com.commercex.service.CategoryService;
+import com.commercex.service.CouponService;
+import com.commercex.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +29,9 @@ public class AdminSystemController {
 
     private final CacheManager cacheManager;
     private final SystemScheduler systemScheduler;
+    private final ProductService productService;
+    private final CategoryService categoryService;
+    private final CouponService couponService;
 
     @PostMapping("/cache/clear")
     @Operation(summary = "Clear all caches", description = "Clears products, categories, and coupons caches")
@@ -50,6 +56,42 @@ public class AdminSystemController {
             return ResponseEntity.ok(ApiResponse.success(null, "Cache " + cacheName + " cleared successfully"));
         }
         return ResponseEntity.badRequest().body(ApiResponse.error("Cache " + cacheName + " not found"));
+    }
+
+    @PostMapping("/cache/refresh")
+    @Operation(summary = "Refresh all caches", description = "Clears and repopulates all main caches (products, categories, coupons)")
+    public ResponseEntity<ApiResponse<String>> refreshAllCaches() {
+        log.info("Admin refreshing all caches");
+        clearAllCaches();
+        productService.getAllProducts();
+        categoryService.getAllCategories();
+        couponService.getAllCoupons();
+        return ResponseEntity.ok(ApiResponse.success(null, "All caches refreshed successfully"));
+    }
+
+    @PostMapping("/cache/refresh/{cacheName}")
+    @Operation(summary = "Refresh specific cache", description = "Clears and repopulates a specific cache by name")
+    public ResponseEntity<ApiResponse<String>> refreshSpecificCache(@PathVariable String cacheName) {
+        log.info("Admin refreshing cache: {}", cacheName);
+        var cache = cacheManager.getCache(cacheName);
+        if (cache == null) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Cache " + cacheName + " not found"));
+        }
+        cache.clear();
+        switch (cacheName.toLowerCase()) {
+            case "products":
+                productService.getAllProducts();
+                break;
+            case "categories":
+                categoryService.getAllCategories();
+                break;
+            case "coupons":
+                couponService.getAllCoupons();
+                break;
+            default:
+                break;
+        }
+        return ResponseEntity.ok(ApiResponse.success(null, "Cache " + cacheName + " refreshed successfully"));
     }
 
     @GetMapping("/scheduler/status")

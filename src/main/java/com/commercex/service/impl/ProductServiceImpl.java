@@ -14,7 +14,9 @@ import com.commercex.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +61,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "products", allEntries = true)
+    @Caching(
+        put = { @CachePut(value = "products", key = "#id.toString()") },
+        evict = { @CacheEvict(value = "products", key = "'all'"), @CacheEvict(value = "products", allEntries = true) }
+    )
     public ProductResponse updateProduct(UUID id, UpdateProductRequest request) {
         log.info("Updating product with ID: {}", id);
         Product product = productRepository.findById(id)

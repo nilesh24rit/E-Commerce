@@ -52,6 +52,9 @@ class OrderServiceImplTest {
     @Mock
     private OrderMapper orderMapper;
 
+    @Mock
+    private org.springframework.context.ApplicationEventPublisher eventPublisher;
+
     @InjectMocks
     private OrderServiceImpl orderService;
 

@@ -12,7 +12,9 @@ import com.commercex.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,7 +51,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "categories", allEntries = true)
+    @Caching(
+        put = { @CachePut(value = "categories", key = "#id.toString()") },
+        evict = { @CacheEvict(value = "categories", key = "'all'"), @CacheEvict(value = "categories", allEntries = true) }
+    )
     public CategoryResponse updateCategory(UUID id, UpdateCategoryRequest request) {
         log.info("Updating category with ID: {}", id);
         Category category = findEntityById(id);

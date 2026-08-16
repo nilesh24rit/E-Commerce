@@ -10,7 +10,9 @@ import com.commercex.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +59,10 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "coupons", allEntries = true)
+    @Caching(
+        put = { @CachePut(value = "coupons", key = "#result.code") },
+        evict = { @CacheEvict(value = "coupons", key = "'all'"), @CacheEvict(value = "coupons", allEntries = true) }
+    )
     public CouponResponse updateCoupon(UUID id, UpdateCouponRequest request) {
         log.info("Updating coupon with id: {}", id);
         

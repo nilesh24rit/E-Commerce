@@ -7,6 +7,7 @@ import com.commercex.entity.User;
 import com.commercex.entity.enums.OrderStatus;
 import com.commercex.entity.enums.PaymentStatus;
 import com.commercex.event.PaymentCompletedEvent;
+import com.commercex.event.RefundProcessedEvent;
 import com.commercex.exception.*;
 import com.commercex.mapper.PaymentMapper;
 import com.commercex.repository.OrderRepository;
@@ -161,7 +162,14 @@ public class PaymentServiceImpl implements PaymentService {
         
         syncOrderStatus(payment.getOrder(), refundedPayment);
         
-        return paymentMapper.toDto(paymentRepository.save(refundedPayment));
+        Payment savedPayment = paymentRepository.save(refundedPayment);
+        eventPublisher.publishEvent(new RefundProcessedEvent(
+                savedPayment.getId(),
+                payment.getOrder().getUser().getEmail(),
+                savedPayment.getAmount(),
+                request.getReason()
+        ));
+        return paymentMapper.toDto(savedPayment);
     }
 
     @Override

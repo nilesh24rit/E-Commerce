@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Received</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 8px;">
+        <h2 style="color: #2980b9;">Payment Successful</h2>
+        <p>Your payment has been successfully processed.</p>
+        <p><strong>Amount Paid:</strong> $<span th:text="${amount}">0.00</span></p>
+    </div>
+</body>
+</html>

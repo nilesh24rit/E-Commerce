@@ -70,4 +70,11 @@ public class AuthenticationController {
         UserResponse response = userService.getUserById(user.getId());
         return ResponseEntity.ok(ApiResponse.success(response, "Current user retrieved successfully"));
     }
+
+    @Operation(summary = "Request password reset email")
+    @PostMapping("/password-reset/request")
+    public ResponseEntity<ApiResponse<String>> requestPasswordReset(@org.springframework.web.bind.annotation.RequestParam String email) {
+        userService.requestPasswordReset(email);
+        return ResponseEntity.ok(ApiResponse.success(null, "Password reset instructions sent to your email"));
+    }
 }

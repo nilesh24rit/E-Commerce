@@ -11,4 +11,5 @@ public interface UserService {
     boolean existsByEmail(String email);
     UserResponse getUserById(UUID id);
     User getCurrentUser();
+    void requestPasswordReset(String email);
 }
