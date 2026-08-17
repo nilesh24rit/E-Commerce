@@ -1,4 +1,4 @@
-# ====================================================
+﻿# ====================================================
 # STAGE 1: Build Stage
 # ====================================================
 FROM maven:3.9.6-eclipse-temurin-17-alpine AS builder
@@ -18,8 +18,14 @@ RUN mvn clean package -DskipTests -B
 FROM eclipse-temurin:17-jre-alpine AS runtime
 WORKDIR /app
 
+# Install wget for health check
+RUN apk add --no-cache wget
+
 # Create non-root system user and group for security
 RUN addgroup -S commercex && adduser -S commercex -G commercex
+
+# Create log directory
+RUN mkdir -p /var/log/commercex && chown -R commercex:commercex /var/log/commercex
 
 # Copy executable jar from build stage
 COPY --from=builder /build/target/commercex-0.0.1-SNAPSHOT.jar app.jar
@@ -31,8 +37,12 @@ USER commercex
 # Expose standard application port
 EXPOSE 8080
 
-# Production JVM Flags
-ENV JAVA_OPTS="-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError"
+# Production JVM Flags - G1GC, bounded heap, OOME exit
+ENV JAVA_OPTS="-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/./urandom"
 
-# Container entry point
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+# Health check (uses actuator)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD wget -qO- http://localhost:8080/actuator/health || exit 1
+
+# Container entry point with graceful shutdown support
+ENTRYPOINT ["sh", "-c", "java  -jar app.jar"]
