@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
 
 # CommerceX
 
@@ -16,6 +16,13 @@
 **Production-ready REST API for e-commerce — built for scale, security, and observability.**
 
 </div>
+
+<p align="center">
+  <a href="https://github.com/nilesh24rit/E-Commerce/issues"><img src="https://img.shields.io/badge/Report-Bug-red?style=flat-square&logo=github" alt="Report Bug"></a>
+  <a href="https://github.com/nilesh24rit/E-Commerce/issues"><img src="https://img.shields.io/badge/Request-Feature-blue?style=flat-square&logo=github" alt="Request Feature"></a>
+  <a href="https://github.com/nilesh24rit/E-Commerce/stargazers"><img src="https://img.shields.io/badge/⭐-Star%20this%20repo-yellow?style=flat-square" alt="Star"></a>
+  <a href="https://github.com/nilesh24rit/E-Commerce/fork"><img src="https://img.shields.io/badge/🍴-Fork-lightgrey?style=flat-square" alt="Fork"></a>
+</p>
 
 ---
 
@@ -115,6 +122,9 @@ graph TB
 
 ### Authentication Flow
 
+<details>
+<summary>Click to expand diagram</summary>
+
 ```mermaid
 sequenceDiagram
     participant C as Client
@@ -139,7 +149,14 @@ sequenceDiagram
     API-->>C: New {accessToken, refreshToken}
 ```
 
+</details>
+
+<div align="right"><a href="#-table-of-contents">⬆ back to top</a></div>
+
 ### Order Flow
+
+<details>
+<summary>Click to expand diagram</summary>
 
 ```mermaid
 sequenceDiagram
@@ -166,7 +183,14 @@ sequenceDiagram
     API-->>C: Payment confirmation
 ```
 
+</details>
+
+<div align="right"><a href="#-table-of-contents">⬆ back to top</a></div>
+
 ### Payment Flow
+
+<details>
+<summary>Click to expand diagram</summary>
 
 ```mermaid
 sequenceDiagram
@@ -192,7 +216,14 @@ sequenceDiagram
     API-->>C: Payment response
 ```
 
+</details>
+
+<div align="right"><a href="#-table-of-contents">⬆ back to top</a></div>
+
 ### Event-Driven Architecture
+
+<details>
+<summary>Click to expand diagram</summary>
 
 ```mermaid
 graph LR
@@ -227,7 +258,14 @@ graph LR
     PaySvc --> K2 --> KConsumer
 ```
 
+</details>
+
+<div align="right"><a href="#-table-of-contents">⬆ back to top</a></div>
+
 ### AWS Deployment Architecture
+
+<details>
+<summary>Click to expand diagram</summary>
 
 ```mermaid
 graph TB
@@ -267,6 +305,10 @@ graph TB
     SM --> T1 & T2
 ```
 
+</details>
+
+<div align="right"><a href="#-table-of-contents">⬆ back to top</a></div>
+
 ---
 
 ## 4. Tech Stack
@@ -286,655 +328,4 @@ graph TB
 | **Email** | Spring Mail + Thymeleaf templates | - |
 | **API Docs** | Springdoc OpenAPI 3 | 2.5.0 |
 | **Monitoring** | Micrometer + Prometheus + Grafana | - |
-| **Build** | Maven | 3.8+ |
-| **Container** | Docker + Docker Compose | 24.0+ |
-| **Utilities** | Lombok, MapStruct | - |
-
----
-
-## 5. Project Structure
-
-```
-commercex/
-├── src/
-│   ├── main/
-│   │   ├── java/com/commercex/
-│   │   │   ├── auth/              # Authentication service
-│   │   │   ├── config/            # Redis, Async, JPA, OpenAPI, BusinessMetrics
-│   │   │   ├── controller/        # REST controllers (11 controllers)
-│   │   │   ├── dto/               # Request/Response DTOs
-│   │   │   ├── entity/            # JPA Entities
-│   │   │   ├── event/             # Spring Application Events
-│   │   │   ├── exception/         # Custom exceptions + GlobalExceptionHandler
-│   │   │   ├── mapper/            # MapStruct mappers
-│   │   │   ├── repository/        # Spring Data JPA repositories
-│   │   │   ├── scheduler/         # Scheduled tasks
-│   │   │   ├── security/          # JWT, filters, security config
-│   │   │   └── service/           # Business logic services
-│   │   └── resources/
-│   │       ├── application.yml        # Base configuration
-│   │       ├── application-dev.yml    # Development profile
-│   │       ├── application-prod.yml   # Production profile
-│   │       ├── db/migration/          # Flyway SQL migrations
-│   │       └── templates/             # Thymeleaf email templates
-│   └── test/
-│       └── java/com/commercex/       # Unit & integration tests
-├── docs/
-│   ├── aws-deployment-guide.md        # AWS ECS deployment guide
-│   └── production-checklist.md       # Pre-deployment checklist
-├── prometheus/
-│   └── prometheus.yml                 # Prometheus scrape config
-├── grafana/
-│   ├── provisioning/                  # Auto-provision datasource
-│   └── dashboards/                    # Pre-built Grafana dashboards
-├── .github/
-│   └── workflows/ci.yml              # GitHub Actions CI pipeline
-├── Dockerfile                         # Multi-stage production Docker build
-├── docker-compose.yml                 # Full local stack
-├── .env.example                       # Environment variable template
-└── pom.xml                            # Maven build descriptor
-```
-
----
-
-## 6. Authentication & Security
-
-### JWT Token Strategy
-- **Access Token**: Short-lived (15 minutes), stateless JWT containing userId, roles
-- **Refresh Token**: Long-lived (24 hours), stored in PostgreSQL, rotated on every use
-- **Token Type Claim**: Prevents refresh tokens from being used as access tokens
-- **Issuer + Audience Validation**: Prevents token misuse across different services
-
-### Security Layers
-| Layer | Implementation |
-|-------|---------------|
-| Password hashing | BCrypt (strength 12) |
-| Transport | HTTPS enforced (HSTS, Strict-Transport-Security) |
-| CORS | Configured per environment (restricted in production) |
-| CSRF | Disabled (stateless JWT API is not vulnerable) |
-| Session | STATELESS (no server-side sessions) |
-| Headers | X-Frame-Options: DENY, X-Content-Type-Options: nosniff |
-| Actuator | `/actuator/health` + `/actuator/info` public; rest requires ROLE_ADMIN |
-| Rate Limiting | Redis-backed sliding window (5 login / 3 register per 60s per IP) |
-| Correlation IDs | Every request tagged with UUID for end-to-end tracing |
-
-### RBAC
-| Role | Permissions |
-|------|-------------|
-| `ROLE_CUSTOMER` | Own profile, own orders, own cart, own wishlist, own reviews |
-| `ROLE_ADMIN` | All customer permissions + product/inventory/category/coupon admin |
-| `ROLE_SELLER` | Product management (future expansion) |
-
----
-
-## 7. Product Management
-
-- Create, read, update, deactivate products
-- Category assignment and browsing
-- SKU-based unique identification
-- Soft delete via `active=false` flag
-- Redis caching (10-minute TTL)
-- Paginated listing with sorting
-
-**Endpoints:** `GET/POST/PUT/DELETE /api/products/**`
-
----
-
-## 8. Inventory Management
-
-- Track available quantity and reserved quantity per product
-- Reserve stock on order creation, release on cancellation
-- Low-stock threshold alerts via application events
-- Atomic operations with optimistic locking
-
-**Endpoints:** `GET/POST/PUT /api/inventory/**`
-
----
-
-## 9. Cart
-
-- Persistent cart per user (database-backed)
-- Add, update quantity, remove items
-- Apply/remove coupons
-- Cart → Order conversion
-- Cart cleared on successful order placement
-
-**Endpoints:** `GET/POST/PUT/DELETE /api/cart/**`
-
----
-
-## 10. Order Management
-
-- Create order from active cart
-- Order status lifecycle: `PENDING → CONFIRMED → PROCESSING → SHIPPED → DELIVERED → CANCELLED`
-- Order history with pagination
-- Role-based: customers see only their own orders
-
-**Endpoints:** `GET/POST/PUT /api/orders/**`
-
----
-
-## 11. Payment Processing
-
-- Create payment for an order
-- Duplicate payment prevention (idempotency)
-- Payment status: `PENDING → COMPLETED | FAILED`
-- Refund request support
-- Transaction ID and failure reason tracking
-
-**Endpoints:** `GET/POST /api/payments/**`
-
----
-
-## 12. Coupon Engine
-
-- Fixed and percentage discounts
-- Minimum order value enforcement
-- Maximum usage limit per coupon
-- Expiry date validation
-- Active/inactive coupon management
-- Per-order coupon application
-
-**Endpoints:** `GET/POST/PUT/DELETE /api/coupons/**`
-
----
-
-## 13. Wishlist
-
-- One wishlist per user
-- Add/remove products
-- Duplicate prevention
-- Paginated wishlist view
-
-**Endpoints:** `GET/POST/DELETE /api/wishlist/**`
-
----
-
-## 14. Reviews & Ratings
-
-- Star ratings 1-5
-- Text review/comment
-- One review per user per product
-- Review eligibility enforcement (requires purchase)
-- Average rating calculation per product
-
-**Endpoints:** `GET/POST/PUT/DELETE /api/reviews/**`
-
----
-
-## 15. Advanced Search
-
-- Full-text product name and description search
-- Filter by category, price range, availability
-- Sort by: name, price, rating, newest
-- Paginated results
-- Search count tracked as a business metric
-
-**Endpoints:** `GET /api/products/search`
-
----
-
-## 16. Redis Caching
-
-| Cache Name | TTL | Contents |
-|-----------|-----|----------|
-| `products` | 10 minutes | Product listings and individual products |
-| `categories` | 30 minutes | Category tree |
-| `coupons` | 5 minutes | Active coupon data |
-| Default | 60 minutes | Other cacheable data |
-
-Cache is invalidated on write operations (CacheEvict). Uses Lettuce connection pool.
-
----
-
-## 17. Async Processing
-
-Spring Boot `@Async` is used for non-blocking operations:
-- **Email sending**: Order confirmation, password reset, registration welcome
-- **Inventory alerts**: Low-stock notifications to admins
-- **Scheduled cleanup**: Expired refresh token purging (runs nightly)
-
----
-
-## 18. Application Events
-
-Spring `ApplicationEventPublisher` events for internal decoupling:
-
-| Event | Publisher | Consumer |
-|-------|----------|---------|
-| `OrderPlacedEvent` | OrderService | EmailService (async) |
-| `PaymentCompletedEvent` | PaymentService | EmailService (async) |
-| `PasswordResetEvent` | UserService | EmailService (async) |
-| `UserRegisteredEvent` | AuthService | EmailService (async) |
-| `LowStockEvent` | InventoryService | EmailService (async) |
-
----
-
-## 19. Kafka
-
-Apache Kafka is used for external event streaming (integrating with downstream systems):
-
-| Topic | Published By | Description |
-|-------|-------------|-------------|
-| `order-events` | OrderService | Order lifecycle events |
-| `payment-events` | PaymentService | Payment status changes |
-
-**Local**: KRaft mode (no ZooKeeper), via Docker Compose.
-**Production**: AWS MSK with SASL_SSL security.
-
-Switch from local to production by setting:
-```
-KAFKA_SECURITY_PROTOCOL=SASL_SSL
-KAFKA_SASL_JAAS_CONFIG=<your-msk-jaas-config>
-```
-
----
-
-## 20. Docker
-
-### Services
-
-| Service | Image | Port |
-|---------|-------|------|
-| commercex | Custom (multi-stage) | 8080 |
-| postgres | postgres:15-alpine | 5432 |
-| redis | redis:7-alpine | 6379 |
-| kafka | apache/kafka:3.7.0 | 9092 |
-| prometheus | prom/prometheus:v2.51.0 | 9090 |
-| grafana | grafana/grafana:10.4.0 | 3000 |
-
-### Docker Security
-- Non-root user (`commercex`) in container
-- Multi-stage build (Maven builder → JRE runtime, no SDK in prod image)
-- JVM flags: G1GC, MaxRAMPercentage=75%, ExitOnOutOfMemoryError
-- Health check defined in Dockerfile and docker-compose
-
----
-
-## 21. CI/CD
-
-GitHub Actions pipeline at [`.github/workflows/ci.yml`](.github/workflows/ci.yml):
-
-```
-┌─────────────┐    ┌──────────────┐    ┌─────────────┐    ┌──────────────┐
-│  Checkout   │ →  │  Setup JDK   │ →  │  mvn test   │ →  │ mvn package  │
-│             │    │  17 + Maven  │    │             │    │              │
-└─────────────┘    └──────────────┘    └─────────────┘    └──────────────┘
-                                                                   │
-                                                          ┌────────────────┐
-                                                          │  docker build  │
-                                                          │  (validate)    │
-                                                          └────────────────┘
-```
-
----
-
-## 22. Monitoring
-
-### Endpoints
-
-| Endpoint | Description |
-|----------|-------------|
-| `GET /actuator/health` | Application + dependency health |
-| `GET /actuator/info` | Application info |
-| `GET /actuator/prometheus` | Prometheus metrics scrape |
-| `http://localhost:9090` | Prometheus server |
-| `http://localhost:3000` | Grafana (admin/admin) |
-
-### Business Metrics (Prometheus)
-
-| Metric | Description |
-|--------|-------------|
-| `commercex.orders.created` | Total orders created |
-| `commercex.payments.successful` | Successful payments |
-| `commercex.payments.failed` | Failed payment attempts |
-| `commercex.product.searches` | Product search queries |
-| `commercex.cart.items.added` | Items added to cart |
-| `commercex.cart.items.removed` | Items removed from cart |
-| `commercex.coupons.applied` | Coupon applications |
-| `commercex.users.registered` | User registrations |
-| `commercex.reviews.submitted` | Reviews submitted |
-
-### Infrastructure Metrics (JVM/HTTP)
-- `http_server_requests_seconds_*` — Request rate and latency
-- `jvm_memory_used_bytes` — JVM heap usage
-- `hikaricp_connections_active` — Active DB connections
-- `system_cpu_usage` — CPU usage
-
-Grafana auto-provisions Prometheus datasource and loads the CommerceX dashboard.
-
----
-
-## 23. AWS Deployment
-
-See full guide in [`docs/aws-deployment-guide.md`](docs/aws-deployment-guide.md).
-
-**Summary**: CommerceX is designed for AWS ECS Fargate deployment with:
-- Application Load Balancer (HTTPS, ACM certificate)
-- RDS PostgreSQL Multi-AZ (private subnet)
-- ElastiCache Redis (private subnet)
-- Amazon MSK Kafka (optional)
-- CloudWatch logs and alarms
-- Secrets Manager for all credentials
-- Auto-scaling based on CPU utilization
-
-> **Note**: Actual AWS deployment requires AWS credentials, an active AWS account, and provisioned infrastructure. No AWS resources are claimed to exist — this is deployment-ready configuration.
-
----
-
-## 24. Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SPRING_PROFILES_ACTIVE` | `dev` | Active profile (`dev` or `prod`) |
-| `SERVER_PORT` | `8080` | Application port |
-| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://localhost:5432/commercex` | Database URL |
-| `SPRING_DATASOURCE_USERNAME` | `postgres` | DB username |
-| `SPRING_DATASOURCE_PASSWORD` | `password` | DB password |
-| `DB_POOL_MAX_SIZE` | `10` | HikariCP max connections |
-| `DB_POOL_MIN_IDLE` | `2` | HikariCP min idle connections |
-| `SPRING_REDIS_HOST` | `localhost` | Redis host |
-| `SPRING_REDIS_PORT` | `6379` | Redis port |
-| `SPRING_REDIS_PASSWORD` | (empty) | Redis password |
-| `SPRING_KAFKA_BOOTSTRAP_SERVERS` | `localhost:9092` | Kafka brokers |
-| `KAFKA_CONSUMER_GROUP_ID` | `commercex-group` | Consumer group |
-| `SPRING_MAIL_HOST` | `localhost` | SMTP host |
-| `SPRING_MAIL_PORT` | `1025` | SMTP port |
-| `SPRING_MAIL_USERNAME` | - | SMTP username |
-| `SPRING_MAIL_PASSWORD` | - | SMTP password |
-| `JWT_SECRET` | (default dev key) | JWT signing key (hex) |
-| `JWT_EXPIRATION_MS` | `900000` | Access token expiry (15min) |
-| `JWT_REFRESH_EXPIRATION_MS` | `86400000` | Refresh token expiry (24hr) |
-| `CORS_ALLOWED_ORIGINS` | `http://localhost:3000,...` | Allowed CORS origins |
-| `RATE_LIMIT_ENABLED` | `true` | Enable rate limiting |
-| `RATE_LIMIT_LOGIN_MAX` | `5` | Max login attempts per window |
-| `RATE_LIMIT_LOGIN_WINDOW` | `60` | Login rate limit window (seconds) |
-| `GF_SECURITY_ADMIN_PASSWORD` | `admin` | Grafana admin password |
-
----
-
-## 25. Local Setup
-
-### Prerequisites
-
-- Java 17+
-- Maven 3.8+
-- Docker Desktop 24.0+
-
-### Quick Start
-
-```bash
-# 1. Clone the repository
-git clone <repository-url>
-cd commercex
-
-# 2. Copy environment configuration
-cp .env.example .env
-
-# 3. Start all services with Docker Compose
-docker compose up -d
-
-# 4. Wait for services to be healthy
-docker compose ps
-
-# 5. Access the application
-open http://localhost:8080/swagger-ui.html
-```
-
-### Run Locally (without Docker)
-
-```bash
-# Start dependencies only
-docker compose up -d postgres redis kafka
-
-# Build and run Spring Boot
-mvn clean package -DskipTests
-java -jar target/commercex-0.0.1-SNAPSHOT.jar
-
-# OR use Maven dev server
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-```
-
-### Service URLs
-
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| API | http://localhost:8080 | — |
-| Swagger UI | http://localhost:8080/swagger-ui.html | — |
-| Actuator Health | http://localhost:8080/actuator/health | — |
-| Prometheus | http://localhost:9090 | — |
-| Grafana | http://localhost:3000 | admin / admin |
-
----
-
-## 26. API Documentation
-
-Interactive API documentation is available at:
-- **Swagger UI**: `http://localhost:8080/swagger-ui.html`
-- **OpenAPI JSON**: `http://localhost:8080/v3/api-docs`
-
-### API Examples
-
-#### Register User
-
-```http
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "firstName": "Jane",
-  "lastName": "Doe",
-  "email": "jane@example.com",
-  "password": "SecurePassword123!"
-}
-```
-
-#### Login
-
-```http
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "email": "jane@example.com",
-  "password": "SecurePassword123!"
-}
-
-Response:
-{
-  "success": true,
-  "message": "Login successful",
-  "data": {
-    "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
-    "refreshToken": "uuid-refresh-token",
-    "tokenType": "Bearer",
-    "expiresIn": 900
-  }
-}
-```
-
-#### Refresh Token
-
-```http
-POST /api/auth/refresh
-Content-Type: application/json
-
-{
-  "refreshToken": "uuid-refresh-token"
-}
-```
-
-#### Create Product (Admin)
-
-```http
-POST /api/products
-Authorization: Bearer <admin-jwt>
-Content-Type: application/json
-
-{
-  "name": "Wireless Headphones Pro",
-  "description": "Premium noise-cancelling headphones",
-  "price": 299.99,
-  "sku": "WH-PRO-001",
-  "categoryId": 1
-}
-```
-
-#### Search Products
-
-```http
-GET /api/products/search?q=headphones&categoryId=1&minPrice=100&maxPrice=500&sort=price&page=0&size=20
-Authorization: Bearer <jwt>
-```
-
-#### Add to Cart
-
-```http
-POST /api/cart/items
-Authorization: Bearer <customer-jwt>
-Content-Type: application/json
-
-{
-  "productId": "uuid-product-id",
-  "quantity": 2
-}
-```
-
-#### Create Order
-
-```http
-POST /api/orders
-Authorization: Bearer <customer-jwt>
-Content-Type: application/json
-
-{
-  "shippingAddress": "123 Main St, New York, NY 10001"
-}
-```
-
-#### Create Payment
-
-```http
-POST /api/payments
-Authorization: Bearer <customer-jwt>
-Content-Type: application/json
-
-{
-  "orderId": "uuid-order-id",
-  "paymentMethod": "CREDIT_CARD"
-}
-```
-
-#### Apply Coupon
-
-```http
-POST /api/cart/coupon
-Authorization: Bearer <customer-jwt>
-Content-Type: application/json
-
-{
-  "code": "SAVE20"
-}
-```
-
-#### Add Review
-
-```http
-POST /api/reviews
-Authorization: Bearer <customer-jwt>
-Content-Type: application/json
-
-{
-  "productId": "uuid-product-id",
-  "rating": 5,
-  "comment": "Excellent product! Highly recommended."
-}
-```
-
-#### Add to Wishlist
-
-```http
-POST /api/wishlist/items
-Authorization: Bearer <customer-jwt>
-Content-Type: application/json
-
-{
-  "productId": "uuid-product-id"
-}
-```
-
-#### Admin — Get All Orders
-
-```http
-GET /api/admin/orders?page=0&size=20&status=PENDING
-Authorization: Bearer <admin-jwt>
-```
-
----
-
-## 27. Testing
-
-```bash
-# Run all tests
-mvn clean test
-
-# Run specific test class
-mvn test -Dtest=JwtTokenProviderTest
-
-# Run with coverage report
-mvn clean test jacoco:report
-```
-
-### Test Coverage
-
-| Layer | Tests |
-|-------|-------|
-| Security (JWT) | Token generation, validation, expiry |
-| Authentication | Login, register, refresh flows |
-| Email Service | Template rendering, async sending |
-| Redis Cache | Cache hit/miss, TTL |
-| Async Execution | @Async method execution |
-| Application Events | Event publishing and handling |
-| Scheduled Tasks | Refresh token cleanup |
-
----
-
-## 28. Production Deployment
-
-See detailed guide in [`docs/aws-deployment-guide.md`](docs/aws-deployment-guide.md).
-
-### Quick Production Checklist
-
-```bash
-# 1. Run tests
-mvn clean test
-
-# 2. Build JAR
-mvn clean package -DskipTests
-
-# 3. Build Docker image
-docker build -t commercex:latest .
-
-# 4. Push to ECR
-docker tag commercex:latest <ECR_REGISTRY>/commercex:<VERSION>
-docker push <ECR_REGISTRY>/commercex:<VERSION>
-
-# 5. Update ECS service
-aws ecs update-service \
-  --cluster commercex-cluster \
-  --service commercex-service \
-  --force-new-deployment
-
-# 6. Verify health
-curl https://your-domain.com/actuator/health
-```
-
-See full pre-deployment checklist in [`docs/production-checklist.md`](docs/production-checklist.md).
-
----
-
-<div align="center">
-
-**CommerceX** — Built for enterprise. Designed for scale. Ready for production.
-
-</div>
+| **Build**
