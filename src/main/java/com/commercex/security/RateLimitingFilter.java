@@ -1,4 +1,4 @@
-﻿package com.commercex.security;
+package com.commercex.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-﻿package com.commercex.security;
+package com.commercex.security;
 
 public class SecurityConstants {
     public static final String[] PUBLIC_URLS = {

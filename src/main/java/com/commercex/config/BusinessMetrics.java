@@ -1,4 +1,4 @@
-﻿package com.commercex.config;
+package com.commercex.config;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;

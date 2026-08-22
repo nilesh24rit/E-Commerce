@@ -1,4 +1,4 @@
-﻿package com.commercex.exception;
+package com.commercex.exception;
 
 import com.commercex.dto.ApiErrorResponse;
 import com.commercex.security.RequestCorrelationFilter;

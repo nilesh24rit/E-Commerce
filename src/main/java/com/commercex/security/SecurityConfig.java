@@ -1,4 +1,4 @@
-﻿package com.commercex.security;
+package com.commercex.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
