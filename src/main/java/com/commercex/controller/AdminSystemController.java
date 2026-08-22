@@ -1,7 +1,7 @@
 package com.commercex.controller;
 
 import com.commercex.dto.ApiResponse;
-import com.commercex.scheduler.SystemScheduler;
+import com.commercex.scheduling.Scheduling;
 import com.commercex.service.CategoryService;
 import com.commercex.service.CouponService;
 import com.commercex.service.ProductService;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class AdminSystemController {
 
     private final CacheManager cacheManager;
-    private final SystemScheduler systemScheduler;
+    private final Scheduling scheduling;
     private final ProductService productService;
     private final CategoryService categoryService;
     private final CouponService couponService;
@@ -98,7 +98,7 @@ public class AdminSystemController {
     @Operation(summary = "View Scheduler Status", description = "Returns the last run times of background jobs")
     public ResponseEntity<ApiResponse<Map<String, LocalDateTime>>> getSchedulerStatus() {
         log.info("Admin fetching scheduler status");
-        return ResponseEntity.ok(ApiResponse.success(systemScheduler.getSchedulerStatus(), "Scheduler status fetched"));
+        return ResponseEntity.ok(ApiResponse.success(scheduling.getSchedulerStatus(), "Scheduler status fetched"));
     }
 
     @PostMapping("/reports/trigger/{reportName}")
@@ -107,19 +107,19 @@ public class AdminSystemController {
         log.info("Admin manually triggering report: {}", reportName);
         switch (reportName.toLowerCase()) {
             case "low-stock":
-                systemScheduler.generateLowStockReport();
+                scheduling.generateLowStockReport();
                 break;
             case "daily-sales":
-                systemScheduler.generateDailySalesSummary();
+                scheduling.generateDailySalesSummary();
                 break;
             case "weekly-analytics":
-                systemScheduler.generateWeeklyAnalyticsReport();
+                scheduling.generateWeeklyAnalyticsReport();
                 break;
             case "cleanup-coupons":
-                systemScheduler.cleanupExpiredCoupons();
+                scheduling.cleanupExpiredCoupons();
                 break;
             case "cleanup-payments":
-                systemScheduler.cleanupFailedPayments();
+                scheduling.cleanupFailedPayments();
                 break;
             default:
                 return ResponseEntity.badRequest().body(ApiResponse.error("Unknown report or job name"));

@@ -1,4 +1,4 @@
-package com.commercex.scheduler;
+package com.commercex.scheduling;
 
 import com.commercex.entity.Coupon;
 import com.commercex.entity.Order;
@@ -10,7 +10,7 @@ import com.commercex.repository.CouponRepository;
 import com.commercex.repository.OrderRepository;
 import com.commercex.repository.PaymentRepository;
 import com.commercex.repository.ProductRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.commercex.repository.RefreshTokenRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,11 +22,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SystemSchedulerTest {
+class SchedulingTest {
 
     @Mock
     private CouponRepository couponRepository;
@@ -40,8 +41,11 @@ class SystemSchedulerTest {
     @Mock
     private OrderRepository orderRepository;
 
+    @Mock
+    private RefreshTokenRepository refreshTokenRepository;
+
     @InjectMocks
-    private SystemScheduler systemScheduler;
+    private Scheduling scheduling;
 
     @Test
     void cleanupExpiredCoupons_DeactivatesExpiredCoupons() {
@@ -51,11 +55,11 @@ class SystemSchedulerTest {
 
         when(couponRepository.findAll()).thenReturn(List.of(expiredCoupon));
 
-        systemScheduler.cleanupExpiredCoupons();
+        scheduling.cleanupExpiredCoupons();
 
         assertFalse(expiredCoupon.isActive());
         verify(couponRepository).saveAll(anyList());
-        assertNotNull(systemScheduler.getSchedulerStatus().get("ExpiredCouponCleanup"));
+        assertNotNull(scheduling.getSchedulerStatus().get("ExpiredCouponCleanup"));
     }
 
     @Test
@@ -66,11 +70,11 @@ class SystemSchedulerTest {
 
         when(paymentRepository.findByPaymentStatus(PaymentStatus.PENDING)).thenReturn(List.of(stalePayment));
 
-        systemScheduler.cleanupFailedPayments();
+        scheduling.cleanupFailedPayments();
 
         assertEquals(PaymentStatus.FAILED, stalePayment.getPaymentStatus());
         verify(paymentRepository).saveAll(anyList());
-        assertNotNull(systemScheduler.getSchedulerStatus().get("FailedPaymentCleanup"));
+        assertNotNull(scheduling.getSchedulerStatus().get("FailedPaymentCleanup"));
     }
 
     @Test
@@ -82,9 +86,9 @@ class SystemSchedulerTest {
 
         when(productRepository.findAllByActiveTrue()).thenReturn(List.of(lowStockProduct));
 
-        systemScheduler.generateLowStockReport();
+        scheduling.generateLowStockReport();
 
-        assertNotNull(systemScheduler.getSchedulerStatus().get("LowStockReport"));
+        assertNotNull(scheduling.getSchedulerStatus().get("LowStockReport"));
     }
 
     @Test
@@ -96,9 +100,9 @@ class SystemSchedulerTest {
 
         when(orderRepository.findAll()).thenReturn(List.of(order));
 
-        systemScheduler.generateDailySalesSummary();
+        scheduling.generateDailySalesSummary();
 
-        assertNotNull(systemScheduler.getSchedulerStatus().get("DailySalesSummary"));
+        assertNotNull(scheduling.getSchedulerStatus().get("DailySalesSummary"));
     }
 
     @Test
@@ -110,8 +114,15 @@ class SystemSchedulerTest {
 
         when(orderRepository.findAll()).thenReturn(List.of(order));
 
-        systemScheduler.generateWeeklyAnalyticsReport();
+        scheduling.generateWeeklyAnalyticsReport();
 
-        assertNotNull(systemScheduler.getSchedulerStatus().get("WeeklyAnalyticsReport"));
+        assertNotNull(scheduling.getSchedulerStatus().get("WeeklyAnalyticsReport"));
+    }
+
+    @Test
+    void purgeExpiredRefreshTokens_ExecutesSuccessfully() {
+        scheduling.purgeExpiredRefreshTokens();
+        verify(refreshTokenRepository).deleteByExpiryDateBefore(any(java.time.Instant.class));
+        assertNotNull(scheduling.getSchedulerStatus().get("RefreshTokenCleanup"));
     }
 }
