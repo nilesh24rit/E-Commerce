@@ -32,6 +32,14 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final UserService userService;
+    private final com.commercex.service.GoogleOAuthService googleOAuthService;
+
+    @Operation(summary = "Authenticate with Google OAuth2")
+    @PostMapping("/oauth2/google")
+    public ResponseEntity<ApiResponse<AuthResponse>> googleOAuthLogin(@Valid @RequestBody com.commercex.dto.GoogleOAuthRequest request, HttpServletRequest httpRequest) {
+        AuthResponse response = googleOAuthService.authenticateWithGoogle(request, httpRequest);
+        return ResponseEntity.ok(ApiResponse.success(response, "Google OAuth login successful"));
+    }
 
     @Operation(summary = "Register a new user")
     @PostMapping("/register")

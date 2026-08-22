@@ -5,6 +5,7 @@ public class SecurityConstants {
             "/api/auth/register",
             "/api/auth/login",
             "/api/auth/refresh",
+            "/api/auth/oauth2/**",
             "/api/auth/password-reset/request",
             "/v3/api-docs/**",
             "/swagger-ui/**",
