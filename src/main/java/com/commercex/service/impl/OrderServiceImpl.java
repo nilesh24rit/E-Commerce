@@ -80,7 +80,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         BigDecimal shippingCharge = BigDecimal.valueOf(10.00); // Fixed for now
-        BigDecimal totalAmount = subtotal.subtract(discount).add(shippingCharge);
+        BigDecimal discountedSubtotal = subtotal.subtract(discount).max(BigDecimal.ZERO);
+        BigDecimal totalAmount = discountedSubtotal.add(shippingCharge);
 
         Order order = Order.builder()
                 .orderNumber(orderNumber)

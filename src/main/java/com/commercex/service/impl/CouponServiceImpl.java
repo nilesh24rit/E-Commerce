@@ -126,7 +126,8 @@ public class CouponServiceImpl implements CouponService {
             throw new CouponInactiveException("Coupon is inactive");
         }
         
-        if (now.isBefore(coupon.getValidFrom()) || now.isAfter(coupon.getValidUntil())) {
+        if ((coupon.getValidFrom() != null && now.isBefore(coupon.getValidFrom())) ||
+            (coupon.getValidUntil() != null && now.isAfter(coupon.getValidUntil()))) {
             throw new CouponExpiredException("Coupon is expired or not yet valid");
         }
         
@@ -166,6 +167,9 @@ public class CouponServiceImpl implements CouponService {
     }
     
     private BigDecimal calculateDiscount(Coupon coupon, BigDecimal orderAmount) {
+        if (coupon.getDiscountValue() == null || orderAmount == null) {
+            return BigDecimal.ZERO;
+        }
         BigDecimal discount = BigDecimal.ZERO;
         
         if (coupon.getDiscountType() == DiscountType.FIXED) {

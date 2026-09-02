@@ -113,7 +113,7 @@ public class CartServiceImpl implements CartService {
         cartItemRepository.save(item);
         
         // Refresh cart to recalculate totals safely
-        return cartMapper.toDto(cartRepository.findById(cart.getId()).get());
+        return cartMapper.toDto(cartRepository.findById(cart.getId()).orElse(cart));
     }
 
     @Override

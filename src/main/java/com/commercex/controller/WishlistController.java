@@ -23,22 +23,22 @@ public class WishlistController {
     private final WishlistService wishlistService;
 
     @Operation(summary = "Get my wishlist")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @GetMapping
     public ResponseEntity<ApiResponse<WishlistResponse>> getMyWishlist() {
         return ResponseEntity.ok(ApiResponse.success(wishlistService.getMyWishlist(), "Wishlist retrieved"));
     }
 
     @Operation(summary = "Add a product to wishlist")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @PostMapping("/items")
     public ResponseEntity<ApiResponse<WishlistResponse>> addProductToWishlist(@Valid @RequestBody AddWishlistItemRequest request) {
         WishlistResponse response = wishlistService.addProductToWishlist(request);
-        return ResponseEntity.ok(ApiResponse.success(response, "Product added to wishlist"));
+        return new ResponseEntity<>(ApiResponse.success(response, "Product added to wishlist"), org.springframework.http.HttpStatus.CREATED);
     }
 
     @Operation(summary = "Remove a product from wishlist")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @DeleteMapping("/items/{productId}")
     public ResponseEntity<ApiResponse<WishlistResponse>> removeProductFromWishlist(@PathVariable UUID productId) {
         WishlistResponse response = wishlistService.removeProductFromWishlist(productId);

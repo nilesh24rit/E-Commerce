@@ -24,7 +24,7 @@ public class CartController {
     private final CartService cartService;
 
     @Operation(summary = "Get current user cart")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @GetMapping
     public ResponseEntity<ApiResponse<CartResponse>> getCart() {
         CartResponse response = cartService.getCurrentUserCart();
@@ -32,15 +32,15 @@ public class CartController {
     }
 
     @Operation(summary = "Add item to cart")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @PostMapping("/items")
     public ResponseEntity<ApiResponse<CartResponse>> addItem(@Valid @RequestBody AddToCartRequest request) {
         CartResponse response = cartService.addItemToCart(request);
-        return ResponseEntity.ok(ApiResponse.success(response, "Item added to cart"));
+        return new ResponseEntity<>(ApiResponse.success(response, "Item added to cart"), org.springframework.http.HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update item quantity")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @PutMapping("/items/{id}")
     public ResponseEntity<ApiResponse<CartResponse>> updateItemQuantity(
             @PathVariable UUID id,
@@ -50,7 +50,7 @@ public class CartController {
     }
 
     @Operation(summary = "Remove item from cart")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @DeleteMapping("/items/{id}")
     public ResponseEntity<ApiResponse<CartResponse>> removeItem(@PathVariable UUID id) {
         CartResponse response = cartService.removeCartItem(id);
@@ -58,7 +58,7 @@ public class CartController {
     }
 
     @Operation(summary = "Clear the entire cart")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @DeleteMapping
     public ResponseEntity<ApiResponse<CartResponse>> clearCart() {
         CartResponse response = cartService.clearCart();

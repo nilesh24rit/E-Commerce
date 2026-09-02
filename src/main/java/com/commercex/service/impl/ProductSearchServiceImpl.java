@@ -54,7 +54,9 @@ public class ProductSearchServiceImpl implements ProductSearchService {
             }
         }
         
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+        int pageNumber = Math.max(0, request.getPage());
+        int size = (request.getSize() <= 0) ? 10 : Math.min(request.getSize(), 100);
+        Pageable pageable = PageRequest.of(pageNumber, size, sort);
         
         Specification<Product> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();

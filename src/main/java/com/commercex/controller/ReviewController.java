@@ -25,7 +25,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @Operation(summary = "Add a review for a product")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @PostMapping
     public ResponseEntity<ApiResponse<ReviewResponse>> addReview(@Valid @RequestBody CreateReviewRequest request) {
         ReviewResponse response = reviewService.addReview(request);
@@ -33,7 +33,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "Update an existing review")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<ReviewResponse>> updateReview(
             @PathVariable UUID id,
@@ -43,7 +43,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "Delete a review")
-    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteReview(@PathVariable UUID id) {
         reviewService.deleteReview(id);

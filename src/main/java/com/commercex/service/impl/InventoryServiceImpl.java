@@ -90,7 +90,8 @@ public class InventoryServiceImpl implements InventoryService {
         log.info("Restocking product ID: {} with quantity: {}", request.getProductId(), request.getQuantity());
         Inventory inventory = getInventoryEntityByProductId(request.getProductId());
 
-        inventory.setAvailableQuantity(inventory.getAvailableQuantity() + request.getQuantity());
+        int currentAvailable = inventory.getAvailableQuantity() != null ? inventory.getAvailableQuantity() : 0;
+        inventory.setAvailableQuantity(currentAvailable + request.getQuantity());
         inventory.setLastRestockedAt(LocalDateTime.now());
         return inventoryMapper.toDto(inventoryRepository.save(inventory));
     }
@@ -101,12 +102,15 @@ public class InventoryServiceImpl implements InventoryService {
         log.info("Reserving stock for product ID: {} quantity: {}", request.getProductId(), request.getQuantity());
         Inventory inventory = getInventoryEntityByProductId(request.getProductId());
 
-        if (inventory.getAvailableQuantity() < request.getQuantity()) {
+        int currentAvailable = inventory.getAvailableQuantity() != null ? inventory.getAvailableQuantity() : 0;
+        int currentReserved = inventory.getReservedQuantity() != null ? inventory.getReservedQuantity() : 0;
+
+        if (currentAvailable < request.getQuantity()) {
             throw new InsufficientStockException("Not enough available stock to reserve");
         }
 
-        inventory.setAvailableQuantity(inventory.getAvailableQuantity() - request.getQuantity());
-        inventory.setReservedQuantity(inventory.getReservedQuantity() + request.getQuantity());
+        inventory.setAvailableQuantity(currentAvailable - request.getQuantity());
+        inventory.setReservedQuantity(currentReserved + request.getQuantity());
         
         return inventoryMapper.toDto(inventoryRepository.save(inventory));
     }
@@ -117,12 +121,15 @@ public class InventoryServiceImpl implements InventoryService {
         log.info("Releasing reserved stock for product ID: {} quantity: {}", request.getProductId(), request.getQuantity());
         Inventory inventory = getInventoryEntityByProductId(request.getProductId());
 
-        if (inventory.getReservedQuantity() < request.getQuantity()) {
+        int currentAvailable = inventory.getAvailableQuantity() != null ? inventory.getAvailableQuantity() : 0;
+        int currentReserved = inventory.getReservedQuantity() != null ? inventory.getReservedQuantity() : 0;
+
+        if (currentReserved < request.getQuantity()) {
             throw new InvalidStockOperationException("Cannot release more than reserved stock");
         }
 
-        inventory.setReservedQuantity(inventory.getReservedQuantity() - request.getQuantity());
-        inventory.setAvailableQuantity(inventory.getAvailableQuantity() + request.getQuantity());
+        inventory.setReservedQuantity(currentReserved - request.getQuantity());
+        inventory.setAvailableQuantity(currentAvailable + request.getQuantity());
         
         return inventoryMapper.toDto(inventoryRepository.save(inventory));
     }
@@ -133,12 +140,15 @@ public class InventoryServiceImpl implements InventoryService {
         log.info("Deducting reserved stock for product ID: {} quantity: {}", request.getProductId(), request.getQuantity());
         Inventory inventory = getInventoryEntityByProductId(request.getProductId());
 
-        if (inventory.getReservedQuantity() < request.getQuantity()) {
+        int currentReserved = inventory.getReservedQuantity() != null ? inventory.getReservedQuantity() : 0;
+        int currentSold = inventory.getSoldQuantity() != null ? inventory.getSoldQuantity() : 0;
+
+        if (currentReserved < request.getQuantity()) {
             throw new InvalidStockOperationException("Cannot deduct more than reserved stock. Ensure stock is reserved first.");
         }
 
-        inventory.setReservedQuantity(inventory.getReservedQuantity() - request.getQuantity());
-        inventory.setSoldQuantity(inventory.getSoldQuantity() + request.getQuantity());
+        inventory.setReservedQuantity(currentReserved - request.getQuantity());
+        inventory.setSoldQuantity(currentSold + request.getQuantity());
         
         return inventoryMapper.toDto(inventoryRepository.save(inventory));
     }
@@ -157,9 +167,15 @@ public class InventoryServiceImpl implements InventoryService {
         List<Inventory> allInventory = inventoryRepository.findAll();
         
         long totalProducts = allInventory.size();
-        long totalAvailable = allInventory.stream().mapToLong(Inventory::getAvailableQuantity).sum();
-        long totalReserved = allInventory.stream().mapToLong(Inventory::getReservedQuantity).sum();
-        long totalSold = allInventory.stream().mapToLong(Inventory::getSoldQuantity).sum();
+        long totalAvailable = allInventory.stream()
+                .mapToLong(inv -> inv.getAvailableQuantity() != null ? inv.getAvailableQuantity() : 0)
+                .sum();
+        long totalReserved = allInventory.stream()
+                .mapToLong(inv -> inv.getReservedQuantity() != null ? inv.getReservedQuantity() : 0)
+                .sum();
+        long totalSold = allInventory.stream()
+                .mapToLong(inv -> inv.getSoldQuantity() != null ? inv.getSoldQuantity() : 0)
+                .sum();
         long lowStockCount = inventoryRepository.findLowStockProducts().size();
 
         return InventorySummaryResponse.builder()

@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
             throw new ResourceAlreadyExistsException("Product slug already exists: " + request.getSlug());
         }
 
-        if (request.getCategoryId() != null && !request.getCategoryId().equals(product.getCategory().getId())) {
+        if (request.getCategoryId() != null && (product.getCategory() == null || !request.getCategoryId().equals(product.getCategory().getId()))) {
             Category category = categoryService.findEntityById(request.getCategoryId());
             product.setCategory(category);
         }

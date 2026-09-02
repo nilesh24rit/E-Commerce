@@ -26,7 +26,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @Operation(summary = "Place a new order from current cart")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @PostMapping
     public ResponseEntity<ApiResponse<OrderResponse>> createOrder(@Valid @RequestBody CreateOrderRequest request) {
         OrderResponse response = orderService.createOrder(request);
@@ -34,7 +34,7 @@ public class OrderController {
     }
 
     @Operation(summary = "Get current user orders")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @GetMapping
     public ResponseEntity<ApiResponse<List<OrderSummaryResponse>>> getMyOrders() {
         List<OrderSummaryResponse> response = orderService.getMyOrders();

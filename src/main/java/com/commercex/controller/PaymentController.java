@@ -26,7 +26,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @Operation(summary = "Initiate a new payment")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @PostMapping
     public ResponseEntity<ApiResponse<PaymentResponse>> initiatePayment(@Valid @RequestBody CreatePaymentRequest request) {
         PaymentResponse response = paymentService.initiatePayment(request);
@@ -34,7 +34,7 @@ public class PaymentController {
     }
 
     @Operation(summary = "Verify a pending payment")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @PostMapping("/{paymentId}/verify")
     public ResponseEntity<ApiResponse<PaymentResponse>> verifyPayment(@PathVariable String paymentId) {
         PaymentResponse response = paymentService.verifyPayment(paymentId);
@@ -68,7 +68,7 @@ public class PaymentController {
     }
 
     @Operation(summary = "Get current user payment history")
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SELLER')")
     @GetMapping("/history")
     public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getMyPaymentHistory() {
         List<PaymentHistoryResponse> response = paymentService.getMyPaymentHistory();
