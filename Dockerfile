@@ -34,15 +34,12 @@ RUN chown -R commercex:commercex /app
 # Switch to non-root user
 USER commercex
 
-# Expose standard application port
-EXPOSE 8080
-
 # Production JVM Flags - G1GC, bounded heap, OOME exit
 ENV JAVA_OPTS="-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/./urandom"
 
 # Health check (uses actuator)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD wget -qO- http://localhost:8080/actuator/health || exit 1
+    CMD wget -qO- "http://localhost:${PORT:-8080}/actuator/health" || exit 1
 
 # Container entry point with graceful shutdown support
-ENTRYPOINT ["sh", "-c", "java  -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -Dserver.port=${PORT:-8080} -jar app.jar"]

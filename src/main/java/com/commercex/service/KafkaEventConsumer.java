@@ -18,7 +18,7 @@ public class KafkaEventConsumer {
                     "${app.kafka.topics.users:commercex.events.users}",
                     "${app.kafka.topics.notifications:commercex.events.notifications}"
             },
-            groupId = "${spring.kafka.consumer.group-id:commercex-group}"
+            groupId = "${spring.kafka.consumer.group-id}"
     )
     public void consumeEvent(ConsumerRecord<String, Object> record) {
         log.info("Received Kafka message from topic: {} partition: {} offset: {} with key: {}",

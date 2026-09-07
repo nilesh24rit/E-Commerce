@@ -57,9 +57,6 @@ management:
     health:
       show-details: when-authorized
       show-components: when-authorized
-  server:
-    port: ${MANAGEMENT_PORT}
-
 logging:
   level:
     root: WARN
@@ -68,8 +65,3 @@ logging:
     org.hibernate: WARN
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n"
-  file:
-    name: ${LOG_FILE_PATH}
-    max-size: 100MB
-    max-history: 30

@@ -45,7 +45,7 @@ public class GoogleOAuthServiceImpl implements GoogleOAuthService {
     private final UserMapper userMapper;
     private final ApplicationEventPublisher eventPublisher;
 
-    @Value("${app.oauth2.google.client-id:default-google-client-id}")
+    @Value("${GOOGLE_CLIENT_ID:}")
     private String googleClientId;
 
     @Override
