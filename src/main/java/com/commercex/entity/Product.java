@@ -55,7 +55,7 @@ public class Product extends BaseEntity {
     private boolean active = true;
 
     @Builder.Default
-    @Column(precision = 3, scale = 2)
+    @Column(nullable = false)
     private Double averageRating = 0.0;
 
     @Builder.Default
