@@ -5,9 +5,9 @@ spring:
 
   datasource:
     hikari:
-      maximum-pool-size: ${DB_POOL_MAX_SIZE:20}
-      minimum-idle: ${DB_POOL_MIN_IDLE:5}
-      connection-timeout: ${DB_CONNECTION_TIMEOUT_MS:30000}
+      maximum-pool-size: ${DB_POOL_MAX_SIZE}
+      minimum-idle: ${DB_POOL_MIN_IDLE}
+      connection-timeout: ${DB_CONNECTION_TIMEOUT_MS}
       idle-timeout: 600000
       max-lifetime: 1800000
       pool-name: CommerceX-HikariCP-Prod
@@ -28,13 +28,13 @@ spring:
   # Kafka production config (SASL_SSL for AWS MSK)
   kafka:
     properties:
-      security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
-      sasl.mechanism: ${KAFKA_SASL_MECHANISM:PLAIN}
-      sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG:}
+      security.protocol: ${KAFKA_SECURITY_PROTOCOL}
+      sasl.mechanism: ${KAFKA_SASL_MECHANISM}
+      sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG}
 
   data:
     redis:
-      password: ${SPRING_REDIS_PASSWORD:}
+      password: ${SPRING_REDIS_PASSWORD}
       lettuce:
         pool:
           max-active: 16
@@ -58,7 +58,7 @@ management:
       show-details: when-authorized
       show-components: when-authorized
   server:
-    port: ${MANAGEMENT_PORT:8080}
+    port: ${MANAGEMENT_PORT}
 
 logging:
   level:
@@ -70,6 +70,6 @@ logging:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n"
   file:
-    name: ${LOG_FILE_PATH:/var/log/commercex/commercex.log}
+    name: ${LOG_FILE_PATH}
     max-size: 100MB
     max-history: 30

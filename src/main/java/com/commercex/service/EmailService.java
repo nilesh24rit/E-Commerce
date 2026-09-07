@@ -39,7 +39,7 @@ public class EmailService {
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(htmlBody, true);
-            helper.setFrom("noreply@commercex.com");
+            helper.setFrom("nilesh.24.rit@gmail.com");
             
             mailSender.send(message);
             log.info("Email sent successfully to {}", to);

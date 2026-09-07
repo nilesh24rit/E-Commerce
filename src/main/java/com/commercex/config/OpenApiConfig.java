@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
                 version = "1.0",
                 contact = @Contact(
                         name = "Support",
-                        email = "support@commercex.com"
+                        email = "nilesh.24.rit@gmail.com"
                 )
         ),
         security = {
